@@ -1,5 +1,7 @@
+from django.views.generic.edit import FormView
 from django.shortcuts import render
 from django import forms
+from django.http import HttpResponse
 
 # Create your views here.
 
@@ -15,6 +17,25 @@ def index(request):
 
 
 def add(request):
+    context = {}
+    context['form'] = RegForm()
     return render(request, "registration/add.html", {
         "form": RegForm
     })
+
+
+# Creating a class_based registration view
+
+
+class RegFormView(FormView):
+    template_name = "add.html"
+    form_class = RegForm
+    success_url = 'reg_complete/'
+
+    def form_valid(self, form):
+        print(form.data)
+        return super().form_valid(form)
+
+
+def reg_complete(request):
+    return HttpResponse('Registration Complete!')
