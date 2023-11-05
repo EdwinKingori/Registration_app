@@ -1,7 +1,7 @@
 from django.views.generic.edit import FormView
 from django.shortcuts import render
 from django import forms
-from django.http import HttpResponse
+
 
 # Create your views here.
 
@@ -20,7 +20,7 @@ def add(request):
     context = {}
     context['form'] = RegForm()
     return render(request, "registration/add.html", {
-        "form": RegForm
+        "form": context['form']
     })
 
 
@@ -30,7 +30,7 @@ def add(request):
 class RegFormView(FormView):
     template_name = "add.html"
     form_class = RegForm
-    success_url = 'reg_complete/'
+    success_url = 'reg_complete'
 
     def form_valid(self, form):
         print(form.data)
@@ -38,4 +38,4 @@ class RegFormView(FormView):
 
 
 def reg_complete(request):
-    return HttpResponse('Registration Complete!')
+    return render(request, 'registration/complete.html')
