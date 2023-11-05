@@ -1,5 +1,5 @@
 from django.views.generic.edit import FormView
-from django.shortcuts import render
+from django.shortcuts import render, redirect
 from django import forms
 
 
@@ -17,10 +17,15 @@ def index(request):
 
 
 def add(request):
-    context = {}
-    context['form'] = RegForm()
-    return render(request, "registration/add.html", {
-        "form": context['form']
+    if request.method == 'POST':
+        form = RegForm(request.POST)
+        if form.is_valid():
+            # Process the form data (e.g., save it to a database)
+            return redirect('registration:reg_complete')
+    else:
+        form = RegForm()
+    return render(request, 'registration/add.html', {
+        'form': form
     })
 
 
@@ -33,7 +38,7 @@ class RegFormView(FormView):
     success_url = 'reg_complete'
 
     def form_valid(self, form):
-        print(form.data)
+        print(form.cleaned_data)
         return super().form_valid(form)
 
 
